@@ -1,5 +1,6 @@
 package com.company.platform.auth.api;
 
+import com.company.platform.auth.service.OtpService;
 import com.company.platform.common.api.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -8,20 +9,22 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+    private final OtpService otpService;
 
-    @PostMapping("/otp")
-    public ApiResponse<OtpResponse> requestOtp(@Valid @RequestBody OtpRequest request) {
-        // Provider integration belongs in the SMS infrastructure adapter.
-        return ApiResponse.ok(
-                new OtpResponse("OTP_REQUEST_ACCEPTED"),
-                "OTP request accepted"
-        );
+    public AuthController(OtpService otpService) { this.otpService = otpService; }
+
+    @PostMapping("/otp/request")
+    public ApiResponse<OtpResponse> request(@Valid @RequestBody OtpRequest request) {
+        otpService.requestOtp(request.destination());
+        return ApiResponse.ok(new OtpResponse("OTP_SENT"), "OTP sent");
     }
 
-    public record OtpRequest(
-            @NotBlank(message = "destination is required")
-            String destination
-    ) {}
+    @PostMapping("/otp/verify")
+    public ApiResponse<OtpService.TokenResponse> verify(@Valid @RequestBody VerifyOtpRequest request) {
+        return ApiResponse.ok(otpService.verify(request.destination(), request.otp()), "Authenticated");
+    }
 
+    public record OtpRequest(@NotBlank String destination) {}
+    public record VerifyOtpRequest(@NotBlank String destination, @NotBlank String otp) {}
     public record OtpResponse(String status) {}
 }

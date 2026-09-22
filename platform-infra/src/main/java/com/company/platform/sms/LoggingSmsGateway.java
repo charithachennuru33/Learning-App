@@ -6,12 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LoggingSmsGateway implements SmsGateway {
-
     private static final Logger log = LoggerFactory.getLogger(LoggingSmsGateway.class);
 
     @Override
     public void sendOtp(String destination, String otp) {
-        // Development adapter only. Replace with a real provider adapter.
-        log.info("SMS OTP requested for destination={}", destination);
+        // Development-only adapter. Do not log OTPs in production.
+        log.info("Development SMS adapter accepted OTP request for destination={}", destination);
     }
 }

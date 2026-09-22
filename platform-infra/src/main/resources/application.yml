@@ -23,6 +23,12 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
 
+security:
+  jwt:
+    # Replace in every non-local environment with a secret >= 32 bytes.
+    secret: ${JWT_SECRET:dev-only-change-this-secret-key-please-123456789}
+    access-token-ttl: ${JWT_ACCESS_TTL:PT15M}
+
 management:
   endpoints:
     web:

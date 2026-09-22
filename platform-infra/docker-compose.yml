@@ -6,10 +6,8 @@ services:
       POSTGRES_DB: platform_infra
       POSTGRES_USER: platform
       POSTGRES_PASSWORD: platform
-    ports:
-      - "5432:5432"
-    volumes:
-      - platform_infra_postgres:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+    volumes: [platform_infra_postgres:/var/lib/postgresql/data]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U platform -d platform_infra"]
       interval: 5s
@@ -19,10 +17,8 @@ services:
   redis:
     image: redis:8-alpine
     container_name: platform-infra-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - platform_infra_redis:/data
+    ports: ["6379:6379"]
+    volumes: [platform_infra_redis:/data]
 
 volumes:
   platform_infra_postgres:

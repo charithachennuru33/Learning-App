@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    # Overridden by the Testcontainers @ServiceConnection; set only so the placeholder resolves.
+    password: unused
+
+security:
+  jwt:
+    secret: test-only-jwt-secret-0123456789abcdef0123456789
+
+platform:
+  auth:
+    otp:
+      secret: test-only-otp-secret-0123456789abcdef0123456789
+      # Every test request comes from 127.0.0.1; keep IP limits out of the way unless a test targets them.
+      max-requests-per-ip-per-hour: 1000
+      max-verifications-per-ip-per-hour: 1000
+  sms:
+    # The test supplies CapturingSmsGateway instead.
+    provider: none
